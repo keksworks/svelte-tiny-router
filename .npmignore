@@ -1,0 +1,12 @@
+node_modules/
+.git/
+.idea/
+.vscode/
+dist/
+build/
+*.log
+.env
+.env.*
+coverage/
+.svelte-kit/
+src/lib/test/
