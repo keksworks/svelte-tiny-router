@@ -11,7 +11,7 @@
 
   const matchState = getContext<MatchState>('matchState')
 
-  $: p = new RegExp('^' + path.replace(/(^|\/):([^\/]+)/g, '$1(?<$2>[^/]+)').replace(/(^|\/)\*([^\/]+)/g, '$1(?<$2>.*)') + '$')
+  $: p = new RegExp('^' + path.replace(/(^|\/):([^\/]+)/g, '$1(?<$2>[^/]+)').replace(/(^|\/)\*([^\/]+)/g, '($1(?<$2>.*))?') + '$')
   $: matched = $activePath.match(p)
   $: params = matched?.groups
 </script>

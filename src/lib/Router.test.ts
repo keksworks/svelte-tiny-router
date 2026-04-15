@@ -52,4 +52,11 @@ test('single route matching - concrete route should not match parameterized rout
   expect(container.innerHTML).toContain('404 Not Found')
   expect(container.innerHTML).not.toContain('Home Page')
   expect(container.innerHTML).not.toContain('App Detail')
+
+  // Test wildcard matches without the wildcard part
+  navigate('/app')
+  await tick()
+  expect(container.innerHTML).toContain('App Wildcard')
+  expect(container.innerHTML).not.toContain('New App Page')
+  expect(container.innerHTML).not.toContain('App Detail')
 })
