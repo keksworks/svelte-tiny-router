@@ -1,6 +1,6 @@
 {
   "name": "@keksworks/svelte-tiny-router",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A tiny, lightweight router for Svelte applications",
   "type": "module",
   "module": "src/lib/index.ts",
@@ -15,7 +15,11 @@
     }
   },
   "files": [
-    "src/lib",
+    "src/lib/index.ts",
+    "src/lib/Link.svelte",
+    "src/lib/Route.svelte",
+    "src/lib/Router.svelte",
+    "src/lib/Spinner.svelte",
     "README.md"
   ],
   "scripts": {
@@ -49,7 +53,7 @@
     "svelte": "^5.55.0",
     "svelte-check": "^4.4.5",
     "typescript": "^5.7.3",
-    "vite": "^7.3.1",
+    "vite": "^7.3.2",
     "vitest": "^4.1.2"
   }
 }
