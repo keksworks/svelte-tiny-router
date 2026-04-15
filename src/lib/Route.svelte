@@ -1,21 +1,22 @@
 <script lang="ts">
   import type {Component} from 'svelte'
-  import {activePath, routeMatched} from './index'
+  import {activePath, type MatchState} from './index'
   import Spinner from './Spinner.svelte'
+  import {getContext} from 'svelte'
 
   type AnyComponent = Component<any, any, any>
 
   export let path = ''
   export let component: AnyComponent | Promise<{default: AnyComponent}> | undefined = undefined
 
-  // Support for /:param and /*rest
+  const matchState = getContext<MatchState>('matchState')
+
   $: p = new RegExp('^' + path.replace(/(^|\/):([^\/]+)/g, '$1(?<$2>[^/]+)').replace(/(^|\/)\*([^\/]+)/g, '$1(?<$2>.*)') + '$')
   $: matched = $activePath.match(p)
-  $: if (matched) $routeMatched = true
   $: params = matched?.groups
 </script>
 
-{#if matched || !path && !$routeMatched}
+{#if matchState.tryMatch(!!matched) || !path && !matchState.claimed}
   {#if $$slots.default}
     <slot {...params}/>
   {:else if component instanceof Promise}

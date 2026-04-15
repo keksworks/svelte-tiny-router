@@ -5,12 +5,14 @@ import Link from './Link.svelte'
 import {on} from 'svelte/events'
 
 export const activePath = writable(location.pathname)
-export const routeMatched = writable(false)
-
-activePath.subscribe(() => routeMatched.set(false))
 
 export function init() {
   return on(window, 'popstate', () => activePath.set(location.pathname))
+}
+
+export type MatchState = {
+  claimed: boolean
+  tryMatch: (matched: boolean) => boolean
 }
 
 let refreshNavigate = false

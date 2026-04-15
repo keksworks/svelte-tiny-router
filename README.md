@@ -1,6 +1,6 @@
 # @keksworks/svelte-tiny-router
 
-A tiny, lightweight router for Svelte 5 applications. Zero dependencies beyond Svelte itself.
+A tiny, lightweight router for Svelte applications. Zero dependencies beyond Svelte itself.
 
 ## Features
 
@@ -11,6 +11,7 @@ A tiny, lightweight router for Svelte 5 applications. Zero dependencies beyond S
 - ⚡ Lazy loading - async component loading with spinner
 - 🧩 Slot-based - flexible composition
 - 📦 No external dependencies
+- 🎯 Single route matching - only the first matching route renders
 
 ## Installation
 
@@ -157,7 +158,7 @@ Define a fallback route for unmatched paths:
 <Router>
   <Route path="/" component={Home}/>
   <Route path="/about" component={About}/>
-  
+
   <!-- Fallback route (no path specified) -->
   <Route>
     <h1>404 - Page Not Found</h1>
@@ -165,6 +166,40 @@ Define a fallback route for unmatched paths:
   </Route>
 </Router>
 ```
+
+## Route Matching
+
+Routes are matched in **DOM order** — the first `<Route>` whose pattern matches the current path will render, and all subsequent routes are ignored. This means you should define more specific routes before generic ones:
+
+```svelte
+<Router>
+  <!-- ✅ Concrete route first -->
+  <Route path="/app/new">
+    <NewApp/>
+  </Route>
+
+  <!-- ✅ Parameterized route second -->
+  <Route path="/app/:id" let:id>
+    <AppDetail {id}/>
+  </Route>
+
+  <!-- ✅ Wildcard route last -->
+  <Route path="/app/*rest" let:rest>
+    <AppFallback {rest}/>
+  </Route>
+
+  <!-- ✅ Fallback route at the end -->
+  <Route>
+    <NotFound/>
+  </Route>
+</Router>
+```
+
+With this order:
+- `/app/new` → renders `<NewApp/>` only
+- `/app/123` → renders `<AppDetail id="123"/>` only
+- `/app/some/path` → renders `<AppFallback rest="some/path"/>` only
+- `/anything/else` → renders `<NotFound/>` only
 
 ## API Reference
 
@@ -240,20 +275,6 @@ import {activePath} from '@keksworks/svelte-tiny-router'
 
 activePath.subscribe(path => {
   console.log('Current path:', path)
-})
-```
-
-#### `routeMatched`
-
-Svelte store indicating if any route has been matched.
-
-```ts
-import {routeMatched} from '@keksworks/svelte-tiny-router'
-
-routeMatched.subscribe(matched => {
-  if (!matched) {
-    // Show 404 or fallback UI
-  }
 })
 ```
 
