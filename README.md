@@ -9,6 +9,7 @@ A tiny, lightweight router for Svelte applications. Zero dependencies.
 - ⚡ Lazy loading with built-in spinner
 - 🎯 Single route matching — only the first matching route renders
 - 📦 No external dependencies
+- Supports Svelte 5 and Svelte 4
 
 ## Installation
 
