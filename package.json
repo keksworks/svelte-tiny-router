@@ -40,7 +40,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/keksworks/svelte-tiny-router.git"
+    "url": "git+https://github.com/keksworks/svelte-tiny-router.git"
   },
   "peerDependencies": {
     "svelte": "^5.0.0"
