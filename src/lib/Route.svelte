@@ -1,10 +1,7 @@
 <script lang="ts">
-  import type {Component} from 'svelte'
-  import {activePath, type MatchState} from './index'
+  import {activePath, type AnyComponent, type MatchState} from './index'
   import Spinner from './Spinner.svelte'
   import {getContext} from 'svelte'
-
-  type AnyComponent = Component<any, any, any>
 
   export let path = ''
   export let component: AnyComponent | Promise<{default: AnyComponent}> | undefined = undefined

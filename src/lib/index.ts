@@ -3,6 +3,7 @@ import Route from './Route.svelte'
 import Router from './Router.svelte'
 import Link from './Link.svelte'
 import {on} from 'svelte/events'
+import type {Component} from 'svelte'
 
 export const activePath = writable(location.pathname)
 
@@ -13,6 +14,13 @@ export function init() {
 export type MatchState = {
   claimed: boolean
   tryMatch: (matched: boolean) => boolean
+}
+
+export type AnyComponent = Component<any, any, any>
+
+export type RouteProps = {
+  path?: string
+  component?: AnyComponent | Promise<{default: AnyComponent}>
 }
 
 let refreshNavigate = false
