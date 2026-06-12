@@ -1,26 +1,26 @@
 <script lang="ts">
-  import {init, activePath, type MatchState, type RouteProps} from './index'
+  import {init, activePath, type MatchState, type RenderableComponent} from './index'
   import {onMount} from 'svelte'
   import {setContext} from 'svelte'
   import Route from './Route.svelte'
 
-  export let routes: RouteProps[] = []
+  export let routes: Record<string, {component: RenderableComponent}> = {}
+  export let matchedPath: string | undefined = undefined
 
   onMount(init)
 
   const matchState: MatchState = {
-    claimed: false,
-    tryMatch(matched: boolean) {
-      return matched && !this.claimed && (this.claimed = true)
+    tryMatch(matched: boolean, path: string) {
+      return matched && !this.matched && !!(matchedPath = path) && (matchState.matched = true)
     }
   }
   setContext('matchState', matchState)
 
-  $: if ($activePath) matchState.claimed = false
+  $: if ($activePath) matchedPath = matchState.matched = undefined
 </script>
 
-{#each routes as props}
-  <Route {...props}/>
+{#each Object.entries(routes) as [path, props]}
+  <Route {path} {...props}/>
 {/each}
 
 <slot/>

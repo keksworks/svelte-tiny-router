@@ -12,16 +12,12 @@ export function init() {
 }
 
 export type MatchState = {
-  claimed: boolean
-  tryMatch: (matched: boolean) => boolean
+  matched?: boolean
+  tryMatch: (matched: boolean, path: string) => boolean
 }
 
 export type AnyComponent = Component<any, any, any>
-
-export type RouteProps = {
-  path?: string
-  component?: AnyComponent | Promise<{default: AnyComponent}>
-}
+export type RenderableComponent = AnyComponent | Promise<{default: AnyComponent}>
 
 let refreshNavigate = false
 export function refreshOnNextNavigate() {

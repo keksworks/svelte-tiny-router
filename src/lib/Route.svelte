@@ -1,10 +1,10 @@
 <script lang="ts">
-  import {activePath, type AnyComponent, type MatchState} from './index'
+  import {activePath, type MatchState, type RenderableComponent} from './index'
   import Spinner from './Spinner.svelte'
   import {getContext} from 'svelte'
 
   export let path = ''
-  export let component: AnyComponent | Promise<{default: AnyComponent}> | undefined = undefined
+  export let component: RenderableComponent | undefined = undefined
 
   const matchState = getContext<MatchState>('matchState')
 
@@ -13,7 +13,7 @@
   $: params = matched?.groups
 </script>
 
-{#if matchState.tryMatch(!!matched) || !path && !matchState.claimed}
+{#if matchState.tryMatch(!!matched, path) || !path && !matchState.matched}
   {#if $$slots.default}
     <slot {...params}/>
   {:else if component instanceof Promise}
