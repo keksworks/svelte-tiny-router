@@ -1,11 +1,11 @@
 <script lang="ts">
-  import {init, activePath, type MatchState, type RenderableComponent} from './index'
-  import {onMount} from 'svelte'
-  import {setContext} from 'svelte'
+  import {init, activePath, type MatchState, type RenderableComponent, type AnyComponent} from './index'
+  import {onMount, setContext} from 'svelte'
   import Route from './Route.svelte'
 
   export let routes: Record<string, {component: RenderableComponent}> = {}
   export let matchedPath: string | undefined = undefined
+  export let noMatch: AnyComponent | undefined = undefined
 
   onMount(init)
 
@@ -24,3 +24,7 @@
 {/each}
 
 <slot/>
+
+{#if matchedPath === undefined && noMatch}
+  <svelte:component this={noMatch}/>
+{/if}

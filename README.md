@@ -32,13 +32,13 @@ npm install @keksworks/svelte-tiny-router
   <a on:click|preventDefault={() => navigate('/about')}>About</a>
 </nav>
 
-<Router>
+<Router noMatch={NotFoundPage}>
   <Route path="/" component={Home}/>
   <Route path="/user/:id" component={User}/>
   <Route path="/app/new"><NewApp/></Route>
   <Route path="/app/:id" let:id><AppDetail {id}/></Route>
   <Route path="/app/*rest" let:rest><AppFallback {rest}/></Route>
-  <Route component={() => import('./pages/NotFound.svelte')}/>
+  <Route path="/app/async" component={() => import('./pages/AsyncPage.svelte')}/>
 </Router>
 ```
 
