@@ -1,8 +1,9 @@
 <script lang="ts">
-  import {Link, Route, Router} from '../index'
+  import {Route, Router} from '../index'
+  import NotFound from './NotFound.svelte'
 </script>
 
-<Router>
+<Router noMatch={NotFound}>
   <Route path="/">
     <h1>Home Page</h1>
   </Route>
@@ -17,8 +18,5 @@
   </Route>
   <Route path="/about">
     <h1>About Page</h1>
-  </Route>
-  <Route>
-    <h1>404 Not Found</h1>
   </Route>
 </Router>
