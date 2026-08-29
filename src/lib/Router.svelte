@@ -10,14 +10,16 @@
 
   onMount(init)
 
-  const registered: string[] = $state([])
+  const registered: {path: string, pattern: RegExp}[] = $state([])
+
+  function compilePath(path: string) {
+    return new RegExp('^' + path.replace(/(^|\/):([^\/]+)/g, '$1(?<$2>[^/]+)').replace(/(^|\/)\*([^\/]+)/g, '($1(?<$2>.*))?') + '$')
+  }
 
   const selected = $derived.by(() => {
     const current = $activePath
-    for (const path of registered) {
-      if (!path) continue
-      const p = new RegExp('^' + path.replace(/(^|\/):([^\/]+)/g, '$1(?<$2>[^/]+)').replace(/(^|\/)\*([^\/]+)/g, '($1(?<$2>.*))?') + '$')
-      const matched = current.match(p)
+    for (const {path, pattern} of registered) {
+      const matched = current.match(pattern)
       if (matched) return {path, params: matched.groups}
     }
     return undefined
@@ -25,8 +27,11 @@
 
   const ctx: RouterContext = {
     registerRoute(path: string) {
-      registered.push(path)
-      return () => registered.splice(registered.indexOf(path), 1)
+      registered.push({path, pattern: compilePath(path)})
+      return () => {
+        const i = registered.findIndex(r => r.path === path)
+        if (i >= 0) registered.splice(i, 1)
+      }
     },
     get selected() { return selected },
   }
