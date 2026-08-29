@@ -3,9 +3,10 @@
   import {onMount, setContext} from 'svelte'
   import Route from './Route.svelte'
 
-  let {routes = {}, matchedPath = $bindable(undefined)}: {
+  let {routes = {}, matchedPath = $bindable(undefined), noMatch = undefined}: {
     routes?: Record<string, {component: RenderableComponent}>
-    matchedPath?: string | undefined
+    matchedPath?: string
+    noMatch?: RenderableComponent
   } = $props()
 
   onMount(init)
@@ -42,3 +43,7 @@
 {/each}
 
 <slot/>
+
+{#if noMatch}
+  <svelte:component this={noMatch}/>
+{/if}
