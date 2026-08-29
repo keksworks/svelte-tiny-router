@@ -1,22 +1,38 @@
 <script lang="ts">
-  import {init, activePath, type MatchState, type RenderableComponent, type AnyComponent} from './index'
+  import {init, activePath, type RenderableComponent, type RouterContext} from './index'
   import {onMount, setContext} from 'svelte'
   import Route from './Route.svelte'
 
-  export let routes: Record<string, {component: RenderableComponent}> = {}
-  export let matchedPath: string | undefined = undefined
-  export let noMatch: AnyComponent | undefined = undefined
+  let {routes = {}, matchedPath = $bindable(undefined)}: {
+    routes?: Record<string, {component: RenderableComponent}>
+    matchedPath?: string | undefined
+  } = $props()
 
   onMount(init)
 
-  const matchState: MatchState = {
-    tryMatch(matched: boolean, path: string) {
-      return matched && !this.matched && !!(matchedPath = path) && (matchState.matched = true)
-    }
-  }
-  setContext('matchState', matchState)
+  const registered: string[] = $state([])
 
-  $: if ($activePath) matchedPath = matchState.matched = undefined
+  const selected = $derived.by(() => {
+    const current = $activePath
+    for (const path of registered) {
+      if (!path) continue
+      const p = new RegExp('^' + path.replace(/(^|\/):([^\/]+)/g, '$1(?<$2>[^/]+)').replace(/(^|\/)\*([^\/]+)/g, '($1(?<$2>.*))?') + '$')
+      const matched = current.match(p)
+      if (matched) return {path, params: matched.groups}
+    }
+    return undefined
+  })
+
+  const ctx: RouterContext = {
+    registerRoute(path: string) {
+      registered.push(path)
+      return () => registered.splice(registered.indexOf(path), 1)
+    },
+    get selected() { return selected },
+  }
+  setContext<RouterContext>('router', ctx)
+
+  $effect(() => { matchedPath = selected?.path })
 </script>
 
 {#each Object.entries(routes) as [path, props]}
@@ -24,7 +40,3 @@
 {/each}
 
 <slot/>
-
-{#if matchedPath === undefined && noMatch}
-  <svelte:component this={noMatch}/>
-{/if}

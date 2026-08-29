@@ -3,7 +3,7 @@
   import NotFound from './NotFound.svelte'
 </script>
 
-<Router noMatch={NotFound}>
+<Router>
   <Route path="/">
     <h1>Home Page</h1>
   </Route>
@@ -19,4 +19,5 @@
   <Route path="/about">
     <h1>About Page</h1>
   </Route>
+  <Route component={NotFound}/>
 </Router>

@@ -11,9 +11,11 @@ export function init() {
   return on(window, 'popstate', () => activePath.set(location.pathname))
 }
 
-export type MatchState = {
-  matched?: boolean
-  tryMatch: (matched: boolean, path: string) => boolean
+export type SelectedRoute = {path: string, params: Record<string, string>} | undefined
+
+export type RouterContext = {
+  registerRoute: (path: string) => () => void
+  selected?: SelectedRoute
 }
 
 export type AnyComponent = Component<any, any, any>

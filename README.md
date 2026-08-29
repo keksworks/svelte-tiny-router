@@ -32,13 +32,14 @@ npm install @keksworks/svelte-tiny-router
   <a on:click|preventDefault={() => navigate('/about')}>About</a>
 </nav>
 
-<Router noMatch={NotFoundPage}>
+<Router>
   <Route path="/" component={Home}/>
   <Route path="/user/:id" component={User}/>
   <Route path="/app/new"><NewApp/></Route>
   <Route path="/app/:id" let:id><AppDetail {id}/></Route>
   <Route path="/app/*rest" let:rest><AppFallback {rest}/></Route>
   <Route path="/app/async" component={() => import('./pages/AsyncPage.svelte')}/>
+  <Route component={NotFoundPage}/>
 </Router>
 ```
 
@@ -51,7 +52,7 @@ Routes match in **DOM order** — the first match wins. Define concrete routes b
 | Component | Props | Description |
 |-----------|-------|-------------|
 | `<Router>` | — | Wraps all routes, initializes routing |
-| `<Route>` | `path`, `component` | Defines a route. Slot receives URL params via `let:` |
+| `<Route>` | `path`, `component` | Defines a route. Omit `path` (defaults to `""`) for a fallback when no route matches. Slot receives URL params via `let:` |
 | `<Link>` | `to`, `target`, ... | Client-side navigation link |
 
 ### Functions

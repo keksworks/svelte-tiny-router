@@ -1,19 +1,21 @@
 <script lang="ts">
-  import {activePath, type MatchState, type RenderableComponent} from './index'
+  import {type RenderableComponent, type RouterContext} from './index'
   import Spinner from './Spinner.svelte'
-  import {getContext} from 'svelte'
+  import {getContext, onDestroy} from 'svelte'
 
-  export let path: string
-  export let component: RenderableComponent | undefined = undefined
+  let {path = '', component = undefined}: {
+    path?: string
+    component?: RenderableComponent
+  } = $props()
 
-  const matchState = getContext<MatchState>('matchState')
+  const ctx = getContext<RouterContext>('router')
+  const unregister = ctx.registerRoute(path)
+  onDestroy(unregister)
 
-  $: p = new RegExp('^' + path.replace(/(^|\/):([^\/]+)/g, '$1(?<$2>[^/]+)').replace(/(^|\/)\*([^\/]+)/g, '($1(?<$2>.*))?') + '$')
-  $: matched = $activePath.match(p)
-  $: params = matched?.groups
+  const params = $derived(ctx.selected?.params)
 </script>
 
-{#if matchState.tryMatch(!!matched, path)}
+{#if ctx.selected?.path === path || (!path && !ctx.selected)}
   {#if $$slots.default}
     <slot {...params}/>
   {:else if component instanceof Promise}
