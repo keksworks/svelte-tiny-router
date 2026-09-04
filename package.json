@@ -1,6 +1,6 @@
 {
   "name": "@keksworks/svelte-tiny-router",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "A tiny, lightweight router for Svelte applications",
   "type": "module",
   "module": "src/lib/index.ts",

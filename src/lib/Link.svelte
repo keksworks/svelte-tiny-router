@@ -6,7 +6,7 @@
   export let label = ''
 </script>
 
-<a href={to} {target} use:router {...$$restProps} class="active:opacity-75 active:transition-opacity {$$props.class ?? 'text-link'}">
+<a href={to} {target} use:router {...$$restProps} class={$$props.class ?? 'text-link'}>
   <slot/>
-  <span>{label}</span>
+  {#if label}<span>{label}</span>{/if}
 </a>
